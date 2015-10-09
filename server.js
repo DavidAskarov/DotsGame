@@ -1,103 +1,52 @@
+    var
+        http = require('http'),
+        path = require('path'),
+        fs = require('fs'),
+        clients = [];
 
-    var WebSocketServer = require("ws").Server;
-    var http = require("http");
-    var express = require("express");
-    var app = express();
-    //var port = process.env.PORT || 3000;
+    var one = true;
+    var two = true;
 
-    app.use(express.static(__dirname + "/public"));
+    function requestHandler(req, res) {
+        var
+            content = '',
+            fileName = path.basename(req.url),
+            localFolder = __dirname + '/public/';
 
-    var server = http.createServer(app);
+        if(fileName === '')
+        {
+            fileName = 'index.html';
+        }
+
+        if(fileName !== '')
+        {
+            content = localFolder + fileName;
+            fs.readFile(content,function(err,contents){
+                if(!err)
+                {
+                    res.end(contents);
+                }
+                else
+                {
+                    console.dir(err);
+                };
+            });
+        }
+        else
+        {
+            res.writeHead(404, {'Content-Type': 'text/html'});
+            res.end('<h1>Sorry, the page you are looking for cannot be found HA HA HA.</h1>');
+        };
+    };
+
+    var server = http.createServer(requestHandler);
     server.listen(3000);
 
-    console.log("http server listening on %d", port);
+    var WebSocketServer = require('websocket').server;
 
-    var wsServer = new WebSocketServer({server: server});
-    console.log("websocket server created");
-
-
-    //2 /////////////////////////////////////////
-
-
-    //var
-    //    http = require('http'),
-    //    path = require('path'),
-    //    fs = require('fs'),
-    //    clients = [];
-    //
-    //
-    //var one = true;
-    //var two = true;
-    //
-    //function requestHandler(req, res) {
-    //    var
-    //        content = '',
-    //        fileName = path.basename(req.url),
-    //        localFolder = __dirname + '/public/';
-    //
-    //    if(fileName === '')
-    //    {
-    //        fileName = 'index.html';
-    //    }
-    //
-    //    if(fileName !== '')
-    //    {
-    //        content = localFolder + fileName;
-    //        fs.readFile(content,function(err,contents){
-    //            if(!err)
-    //            {
-    //                res.end(contents);
-    //            }
-    //            else
-    //            {
-    //                console.dir(err);
-    //            };
-    //        });
-    //    }
-    //    else
-    //    {
-    //        res.writeHead(404, {'Content-Type': 'text/html'});
-    //        res.end('<h1>Sorry, the page you are looking for cannot be found HA HA HA.</h1>');
-    //    };
-    //};
-    //
-    ////var server = http.createServer(requestHandler);
-    ////server.listen(3000);
-    //
-    ///////////////////////////
-    //
-    //
-    //var express = require('express');
-    //var app = express();
-    //
-    //// set the port of our application
-    //// process.env.PORT lets the port be set by Heroku
-    //var port = process.env.PORT || 3000;
-    //
-    //// set the view engine to ejs
-    //app.set('view engine', 'ejs');
-    //
-    //// make express look in the public directory for assets (css/js/img)
-    //app.use(express.static(__dirname + '/public'));
-    //
-    //// set the home page route
-    //app.get('/', function(req, res) {
-    //
-    //    // ejs render automatically looks in the views folder
-    //    res.render('index');
-    //});
-    //
-    //app.listen(port, function() {
-    //    console.log('Our app is running on http://localhost:' + port);
-    //});
-    //
-    ///////////////////////////
-
-    //var WebSocketServer = require('websocket').server;
-    //
-    //var wsServer = new WebSocketServer({
-    //    httpServer: app
-    //});
+    var wsServer = new WebSocketServer({
+        httpServer: server
+    });
 
     wsServer.on('request', function(request)
     {
@@ -210,6 +159,11 @@
             {
                 return [(x), (y-1), (x+1), (y-1), (x+1), (y), (x+1), (y+1), (x), (y+1), (x-1), (y+1), (x-1), (y), (x-1), (y-1)];
             };
+
+            //var reverse=function(x, y)
+            //{
+            //    return [(x), (y-1), (x+1), (y-1), (x+1), (y), (x+1), (y+1), (x), (y+1), (x-1), (y+1), (x-1), (y), (x-1), (y-1)];
+            //};
 
             var isClosed=determineContour(strFirstX, strFirstY, (strFirstX + strFirstY), clockwise);
             console.log("Contour");
