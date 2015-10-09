@@ -1,13 +1,14 @@
 {
   "name": "DotsGame",
   "version": "0.1.4",
-
+  "main": "index.js",
   "engines": {
     "node": "4.1.1"
   },
   "scripts": {
     "start": "index.js"
   },
+
   "dependencies": {
     "ejs": "^2.3.1",
     "express": "~4.9.x",
