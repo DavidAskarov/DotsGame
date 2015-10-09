@@ -1,12 +1,12 @@
 {
   "name": "DotsGame",
   "version": "0.1.4",
-  "main": "index.js",
+  "main": "server.js",
   "engines": {
     "node": "4.1.1"
   },
   "scripts": {
-    "start": "index.js"
+    "start": "server.js"
   },
 
   "dependencies": {
