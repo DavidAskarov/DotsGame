@@ -1,53 +1,103 @@
-    var
-        http = require('http'),
-        path = require('path'),
-        fs = require('fs'),
-        clients = [];
 
-    
-    var one = true;
-    var two = true;
+    var WebSocketServer = require("ws").Server;
+    var http = require("http");
+    var express = require("express");
+    var app = express();
+    //var port = process.env.PORT || 3000;
 
-    function requestHandler(req, res) {
-        var
-            content = '',
-            fileName = path.basename(req.url),
-            localFolder = __dirname + '/public/';
+    app.use(express.static(__dirname + "/public"));
 
-        if(fileName === '')
-        {
-            fileName = 'index.html';
-        }
-
-        if(fileName !== '')
-        {
-            content = localFolder + fileName;
-            fs.readFile(content,function(err,contents){
-                if(!err)
-                {
-                    res.end(contents);
-                }
-                else
-                {
-                    console.dir(err);
-                };
-            });
-        }
-        else
-        {
-            res.writeHead(404, {'Content-Type': 'text/html'});
-            res.end('<h1>Sorry, the page you are looking for cannot be found HA HA HA.</h1>');
-        };
-    };
-
-    var server = http.createServer(requestHandler);
+    var server = http.createServer(app);
     server.listen(3000);
 
-    var WebSocketServer = require('websocket').server;
+    console.log("http server listening on %d", port);
 
-    var wsServer = new WebSocketServer({
-        httpServer: server
-    });
+    var wsServer = new WebSocketServer({server: server});
+    console.log("websocket server created");
+
+
+    //2 /////////////////////////////////////////
+
+
+    //var
+    //    http = require('http'),
+    //    path = require('path'),
+    //    fs = require('fs'),
+    //    clients = [];
+    //
+    //
+    //var one = true;
+    //var two = true;
+    //
+    //function requestHandler(req, res) {
+    //    var
+    //        content = '',
+    //        fileName = path.basename(req.url),
+    //        localFolder = __dirname + '/public/';
+    //
+    //    if(fileName === '')
+    //    {
+    //        fileName = 'index.html';
+    //    }
+    //
+    //    if(fileName !== '')
+    //    {
+    //        content = localFolder + fileName;
+    //        fs.readFile(content,function(err,contents){
+    //            if(!err)
+    //            {
+    //                res.end(contents);
+    //            }
+    //            else
+    //            {
+    //                console.dir(err);
+    //            };
+    //        });
+    //    }
+    //    else
+    //    {
+    //        res.writeHead(404, {'Content-Type': 'text/html'});
+    //        res.end('<h1>Sorry, the page you are looking for cannot be found HA HA HA.</h1>');
+    //    };
+    //};
+    //
+    ////var server = http.createServer(requestHandler);
+    ////server.listen(3000);
+    //
+    ///////////////////////////
+    //
+    //
+    //var express = require('express');
+    //var app = express();
+    //
+    //// set the port of our application
+    //// process.env.PORT lets the port be set by Heroku
+    //var port = process.env.PORT || 3000;
+    //
+    //// set the view engine to ejs
+    //app.set('view engine', 'ejs');
+    //
+    //// make express look in the public directory for assets (css/js/img)
+    //app.use(express.static(__dirname + '/public'));
+    //
+    //// set the home page route
+    //app.get('/', function(req, res) {
+    //
+    //    // ejs render automatically looks in the views folder
+    //    res.render('index');
+    //});
+    //
+    //app.listen(port, function() {
+    //    console.log('Our app is running on http://localhost:' + port);
+    //});
+    //
+    ///////////////////////////
+
+    //var WebSocketServer = require('websocket').server;
+    //
+    //var wsServer = new WebSocketServer({
+    //    httpServer: app
+    //});
 
     wsServer.on('request', function(request)
     {
