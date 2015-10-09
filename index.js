@@ -160,11 +160,6 @@
                 return [(x), (y-1), (x+1), (y-1), (x+1), (y), (x+1), (y+1), (x), (y+1), (x-1), (y+1), (x-1), (y), (x-1), (y-1)];
             };
 
-            //var reverse=function(x, y)
-            //{
-            //    return [(x), (y-1), (x+1), (y-1), (x+1), (y), (x+1), (y+1), (x), (y+1), (x-1), (y+1), (x-1), (y), (x-1), (y-1)];
-            //};
-
             var isClosed=determineContour(strFirstX, strFirstY, (strFirstX + strFirstY), clockwise);
             console.log("Contour");
             for(var r=0;r<contour.length;r++)
